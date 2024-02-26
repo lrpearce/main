@@ -1,0 +1,103 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Feb 26 20:56:39 2024
+
+@author: lukepearce
+
+"""
+
+import unittest
+
+def allocated_seats(queue):
+    
+    """
+    Allocate seats to people in a queue based on the specified rules.
+
+    Each person in the queue is assigned a seat, and if the assigned seat is already taken,
+    the person is moved to the back of the queue with their next seat number plus 1.
+    
+    Problem taken from HackerRank coding interview question.
+
+    Args:
+        queue (List[int]): A list representing the queue of people, where each element
+                           is the desired seat number of the person.
+
+    Returns:
+        List[int]: A list representing the order in which people are allocated seats.
+
+    Example:
+        >>> queue = [1, 2, 3, 2, 5]
+        >>> allocated_seats(queue)
+        [1, 2, 3, 5, 4]
+    """
+    
+    # Number of people in the queue
+    n = len(queue)
+    
+    # Initialise
+    seat_order = []
+    
+    # Loop until all people are seated
+    while len(seat_order) < n:
+        
+        # Check if person's seat is already taken
+        if queue[0] not in seat_order:
+            
+            # Add to seat order if person's seat isn't there
+            seat_order.append(queue[0])
+            
+            # Remove from queue
+            queue.pop(0)
+       
+        # If seat is taken...
+        else:
+            
+            # ... Add to back of the queue and reallocate seat number + 1
+            queue.append(queue[0] + 1)
+            
+            # Delete from front of the queue
+            queue.pop(0)
+            
+    return seat_order
+
+
+class TestAllocatedSeats(unittest.TestCase):
+
+    def test_allocated_seats_basic(self):
+        queue = [1, 2, 3, 2, 5]
+        result = allocated_seats(queue)
+        self.assertEqual(result, [1, 2, 3, 5, 4])
+
+    def test_allocated_seats_empty_queue(self):
+        queue = []
+        result = allocated_seats(queue)
+        self.assertEqual(result, [])
+
+    def test_allocated_seats_single_person(self):
+        queue = [1]
+        result = allocated_seats(queue)
+        self.assertEqual(result, [1])
+
+    def test_allocated_seats_multiple_same_person(self):
+        queue = [1, 1, 1, 1]
+        result = allocated_seats(queue)
+        self.assertEqual(result, [1, 2, 3, 4])
+
+    def test_allocated_seats_large_queue(self):
+        queue = list(range(1, 1001))
+        result = allocated_seats(queue)
+        expected_result = list(range(1, 1001))
+        self.assertEqual(result, expected_result)
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+
+
+
+
+
+
+

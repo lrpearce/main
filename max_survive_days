@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Feb 26 21:19:42 2024
+
+@author: lukepearce
+
+"""
+
+import unittest
+
+def max_survival_days(lend, payback):
+    
+    """
+    Calculate the maximum number of days a borrower can survive without defaulting.
+    
+    Problem taken from HackerRank coding interview question.
+
+    Args:
+        lend (List[int]): A list of lending amounts by each lender.
+        payback (List[int]): A list of payback amounts corresponding to each lender.
+
+    Returns:
+        int: The maximum number of days the borrower can survive without defaulting.
+
+    Example:
+        >>> lend = [12, 8, 2, 3]
+        >>> payback = [10, 8, 13, 6]
+        >>> max_survival_days(lend, payback)
+        3
+    """
+    
+    # Number of lenders
+    n = len(lend)
+    
+    # Store lend/payback information
+    days = [(i, lend[i], payback[i]) for i in range(n)]
+    
+    # Sort based on payback (ascending)
+    days.sort(key=lambda x: x[2])
+    
+    # Initialise variables
+    prev_lend = 0
+    max_days = 0
+    
+    # Loop through sorted days
+    for day in days:
+        
+        # Get information
+        lend_idx, lend_amt, payback_amt = day
+        
+        # Check if new lending amount can repay old loan
+        if lend_amt >= prev_lend:
+            max_days += 1
+            prev_lend = payback_amt
+        else:
+            break
+        
+    return max_days
+
+
+class TestMaxSurvivalDays(unittest.TestCase):
+
+    def test_max_survival_days_1(self):
+        lend = [12, 8, 2, 3]
+        payback = [10, 8, 13, 6]
+        result = max_survival_days(lend, payback)
+        self.assertEqual(result, 3)  # Expected result: Borrow from lenders 3, 2, 1
+
+    def test_max_survival_days_3(self):
+        lend = [5, 4, 3, 2, 1]
+        payback = [6, 5, 4, 3, 2]
+        result = max_survival_days(lend, payback)
+        self.assertEqual(result, 5)  # Expected result: Borrow from lenders 5, 4, 3, 2, 1
+
+    def test_max_survival_days_empty(self):
+        lend = []
+        payback = []
+        result = max_survival_days(lend, payback)
+        self.assertEqual(result, 0)  # Expected result: No lenders, no days survived
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+
+
+
+
+
+
+
+
+
+
